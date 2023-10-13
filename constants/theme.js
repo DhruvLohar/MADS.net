@@ -45,6 +45,11 @@ const TYPOGRAPHY = {
         textDecorationColor: COLORS.primaryDark,
         textDecorationStyle: "solid",
         textDecorationLine: "underline"
+    },
+    Header: {
+        fontSize: 20,
+        fontFamily: "Poppins_600SemiBold",
+        color: COLORS.primaryDark
     }
 }
 

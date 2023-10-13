@@ -1,7 +1,9 @@
-import { Tabs } from "expo-router";
-import { StyleSheet, View, Text, TouchableWithoutFeedback } from "react-native";
+import { Tabs, usePathname, useRouter } from "expo-router";
+import { StyleSheet, View, Text, SafeAreaView, Image, TouchableOpacity } from "react-native";
 import { COLORS, TYPOGRAPHY } from "../../constants/theme";
 import { AddSquare, CodeCircle, Home, Message, Notification } from "iconsax-react-native";
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
 
 export default () => {
 
@@ -12,6 +14,30 @@ export default () => {
         { name: "collegeNotice", title: "Notice Board", Icon: Notification },
         { name: "community", title: "Community", Icon: Message },
     ];
+    const [activeTab, setActiveTab] = useState(tabs[0]);
+
+    const TabHeader = () => {
+        const route = useRouter();
+        const path = usePathname();
+
+        const currentTab = tabs.find((tab) => tab.name === path.replace("/", ""));
+        
+
+        return (
+            <SafeAreaView>
+                <View style={styles.tabHeader}>
+                    <StatusBar style="dark" translucent={false} backgroundColor={COLORS.primaryLight} />
+                    <Text style={[TYPOGRAPHY.Header, {color: COLORS.primaryDark}]}>{currentTab?.title}</Text>
+
+                    <TouchableOpacity style={{ marginLeft: "auto" }} onPress={() => route.push('/profile/1')}>
+                        <View>
+                            <Image source={require("../../assets/profile.jpeg")} style={styles.profileImage} />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <Tabs screenOptions={{
@@ -19,9 +45,9 @@ export default () => {
             headerStyle: {
                 backgroundColor: COLORS.primaryLight
             },
-            headerTitleStyle: {
-                alignSelf: "center"
-            }
+            header: () => (
+                <TabHeader route={"TESt"} />
+            )
         }}>
             {tabs.map((item, idx) => (
                 <Tabs.Screen
@@ -48,7 +74,6 @@ const styles = StyleSheet.create({
     container: {
         alignItems: "center",
         paddingVertical: 16,
-        // borderTopWidth: 2
     },
     tabBar: {
         position: "absolute",
@@ -60,5 +85,21 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 25,
         elevation: 0,
         backgroundColor: COLORS.primary
+    },
+
+    tabHeader: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        height: 50,
+        backgroundColor: COLORS.primaryLight,
+        paddingTop: 5,
+        paddingHorizontal: 20
+    },
+    profileImage: {
+        width: 40, 
+        height: 40, 
+        resizeMode: "contain",
+        borderRadius: 20
     }
 })

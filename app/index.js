@@ -41,6 +41,8 @@ const Home = () => {
             <Button title="Signup Page" onPress={() => router.push('/accounts/signup')} />
 
             <Button title="Home Page" onPress={() => router.push('/home')} />
+
+            <Button title="Profile Page" onPress={() => router.push('/profile/3')} />
         </SafeAreaView>
     );
 }
