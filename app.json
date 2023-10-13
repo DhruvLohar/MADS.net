@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "MADS.net",
+    "description": "network",
+    "scheme": "acme",
+    "plugins": [
+      [
+        "@config-plugins/react-native-ble-plx",
+        {
+          "isBackgroundEnabled": true,
+          "modes": ["peripheral", "central"],
+          "bluetoothAlwaysPermission": "Allow MADS.net to connect to bluetooth devices"
+        }
+      ]
+    ],
+    "web": {
+      "bundler": "metro"
+    },
+    "slug": "linkIt",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {  
+      "package": "com.example.MADSnet"
+    }
+  }
+}
