@@ -10,7 +10,7 @@ const CommunityView = () => {
             <View style={[LAYOUTS.flexCenter, { backgroundColor: COLORS.primaryLight }]}>
                 <StatusBar style={"dark"} />
 
-                <Text style={[TYPOGRAPHY.Heading, { marginTop: 35 }]}>Community Code Goes here</Text>
+                <Text style={[TYPOGRAPHY.Heading, { marginTop: 35 }]}>Community</Text>
             </View>
         </>
     );

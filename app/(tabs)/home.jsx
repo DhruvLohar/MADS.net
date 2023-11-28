@@ -1,95 +1,88 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { COLORS, LAYOUTS, TYPOGRAPHY } from '../../constants/theme';
+import { Directions, FlingGestureHandler, State } from 'react-native-gesture-handler';
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HomeView = () => {
-    return (
-        <>
-            <View style={[LAYOUTS.flexCenter, { backgroundColor: COLORS.primaryLight }]}>
-                <StatusBar style={"dark"} />
+  const [current, setCurrent] = useState('black');
+  const [name, setName] = useState(false);
 
-                <Text style={[TYPOGRAPHY.Heading, { marginTop: 35 }]}>Home Page</Text>
-            </View>
+  useEffect(() => {
+    AsyncStorage.getItem("name").then((res) => {
+      setName(res)
+    })
+  }, [])
 
-            {/*
-            <SafeAreaView style={styles.backgroundColor}>
-    <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:"center" }}>
-       <Image source={require("./assets/menu.png")}
-                    style={{marginLeft:18, marginTop:20}} />
-       <Image source={require("./assets/Ellipse.png")}
-                    style={{height:38, width:38,marginTop:20, marginRight:15}} />             
-    </View>
-    
-      <View style={{flexDirection:"column", alignItems:"center",justifyContent:"space-between"}}>
-        <View>
-        <Text style={{fontSize:32, textAlign:"left", marginTop:40,marginLeft:20}}>Hey Dhruv!!</Text>
-       <Text style={{fontSize:14,textAlign:"left",marginLeft:20}}>Check out what other students are up to!</Text>
-       <View style={styles.container}>
-       <FlatList
-        data={images}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        onMomentumScrollEnd={(event) => {
-          const newIndex = Math.floor(event.nativeEvent.contentOffset.x / windowWidth);
-          setCurrentImageIndex(newIndex);
-        }}
-      />
-      <Text style={styles.pageIndicator}>{`${currentImageIndex + 1} / ${images.length}`}</Text>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handlePrevious}>
-          <Text style={styles.buttonText}>Previous</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleNext}>
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
+  const handleSwipeRight = (event) => {
+    if (event.nativeEvent.state === State.ACTIVE) {
+      setCurrent('yellow')
+    }
+  };
+
+  const handleSwipeLeft = (event) => {
+    if (event.nativeEvent.state === State.ACTIVE) {
+      setCurrent("black")
+    }
+  };
+
+  return (
+    <>
+      <View style={[LAYOUTS.flexCenter, { backgroundColor: COLORS.primaryLight, position: "relative", }]}>
+        <StatusBar style={"dark"} />
+
+        <View style={[LAYOUTS.screenView, { marginTop: 30 }]}>
+          <Text style={TYPOGRAPHY.Heading}>Hi, {name}!</Text>
+          <Text style={TYPOGRAPHY.Body}>Check out what others students are up to ...</Text>
+
+          <FlingGestureHandler direction={Directions.RIGHT}
+            onHandlerStateChange={handleSwipeRight}
+          >
+            <FlingGestureHandler direction={Directions.LEFT} 
+              onHandlerStateChange={handleSwipeLeft}>
+
+              <View style={{ width: "100%", marginTop: 20 }}>
+                <View style={{ width: "100%", height: 200, borderRadius: 20, backgroundColor: current }}></View>
+              </View>
+
+            </FlingGestureHandler>
+          </FlingGestureHandler>
+
+        </View>
       </View>
-    </View>
-        </View>
-        <View style={{position:"relative", bottom: 750 }}>
-        <Text style={{fontSize:32, textAlign:"left", marginTop:20}}>Weekly Test</Text>
-      
-       <Image source={require("./assets/rectangle1.png")}
-                    style={{marginTop:20}} />
-        </View>
-     </View>
-    </SafeAreaView>
-            */}
-        </>
-    );
+    </>
+  );
 }
 
 export default HomeView;
 
-/* 
- const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    image: {
-      width: Dimensions.get('window').width, // Display one image at a time
-      height: 300, // Adjust the height as needed
-    },
-    pageIndicator: {
-      alignSelf: 'center',
-      marginVertical: 10,
-    },
-    buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginHorizontal: 20,
-    },
-    button: {
-      backgroundColor: 'blue',
-      padding: 10,
-      borderRadius: 5,
-    },
-    buttonText: {
-      color: 'white',
-    },
-  });
-*/
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  image: {
+    width: Dimensions.get('window').width, // Display one image at a time
+    height: 300, // Adjust the height as needed
+  },
+  pageIndicator: {
+    alignSelf: 'center',
+    marginVertical: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 20,
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+  },
+});
+

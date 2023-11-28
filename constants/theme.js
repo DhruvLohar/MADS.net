@@ -11,6 +11,20 @@ const LAYOUTS = {
         alignItems: 'center',
         justifyContent: 'center',
     },
+    flexStart: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'start'
+    },
+
+    screenView: {
+        width: "100%",
+        height: "100%",
+        paddingHorizontal: 20,
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+    },
     
     LogoImage: {
         width: 180,
@@ -48,7 +62,7 @@ const TYPOGRAPHY = {
     },
     Header: {
         fontSize: 20,
-        fontFamily: "Poppins_600SemiBold",
+        fontFamily: "Poppins_500Medium",
         color: COLORS.primaryDark
     }
 }

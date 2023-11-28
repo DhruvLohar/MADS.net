@@ -7,10 +7,13 @@ import { COLORS, LAYOUTS, TYPOGRAPHY } from '../../constants/theme';
 const MADSWeekView = () => {
     return (
         <>
-            <View style={[LAYOUTS.flexCenter, { backgroundColor: COLORS.primaryLight }]}>
+            <View style={[LAYOUTS.flexCenter, { backgroundColor: COLORS.primaryLight, position: "relative", }]}>
                 <StatusBar style={"dark"} />
 
-                <Text style={[TYPOGRAPHY.Heading, { marginTop: 35 }]}>MADS Week</Text>
+                <View style={[LAYOUTS.screenView, { marginTop: 30 }]}>
+                    <Text style={TYPOGRAPHY.Heading}>MADS Week is Live!</Text>
+                    <Text style={TYPOGRAPHY.Body}>Compete with your mates and show your creativity !</Text>
+                </View>
             </View>
         </>
     );

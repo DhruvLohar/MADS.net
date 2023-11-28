@@ -24,13 +24,8 @@ const Layout = () => {
 
     return <Stack screenOptions={{
         headerShown: false,
-        // headerStyle: {
-        //     backgroundColor: COLORS.primaryDark,
-        //     color: COLORS.primaryLight,
-        //     display: "none"
-        // },
-        // headerShadowVisible: false
-    }} />;
+    }}
+    />;
 }
 
 export default Layout;
