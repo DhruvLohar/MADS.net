@@ -59,7 +59,6 @@ const Profile = () => {
     </>
   );
 }
-
 export default Profile;
 
 const ellipseSize = Dimensions.get('screen').width + 250;
