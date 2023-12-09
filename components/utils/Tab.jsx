@@ -5,6 +5,7 @@ const Tab = ({ title, isActive, switchTab }) => {
     return (
         <TouchableOpacity style={{
             backgroundColor: isActive ? COLORS.primaryDark : "transparent",
+            borderColor: COLORS.primaryDark,
             borderWidth: 2,
             paddingHorizontal: 30,
             paddingVertical: 8,

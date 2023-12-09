@@ -36,6 +36,7 @@ const LAYOUTS = {
 const TYPOGRAPHY = {
     Display: 42,
     Button: 18,
+
     Heading: {
         fontSize: 34,
         fontFamily: "Poppins_500Medium",
@@ -60,11 +61,12 @@ const TYPOGRAPHY = {
         textDecorationStyle: "solid",
         textDecorationLine: "underline"
     },
+
     Header: {
         fontSize: 20,
         fontFamily: "Poppins_500Medium",
         color: COLORS.primaryDark
-    }
+    },
 }
 
 const SHADOWS = {}
