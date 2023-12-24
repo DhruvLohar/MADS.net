@@ -43,6 +43,14 @@ const Home = () => {
             <Button title="Home Page" onPress={() => router.push('/home')} />
 
             <Button title="Profile Page" onPress={() => router.push('/profile/3')} />
+
+            <Text style={{ paddingVertical: 20, textAlign: 'center', color: COLORS.primaryDark }}>
+                Attendance System
+            </Text>
+
+            <Button title="Student View" onPress={() => router.push('/student')} />
+            <Button title="Host View" onPress={() => router.push('/host')} />
+
         </SafeAreaView>
     );
 }

@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { COLORS, LAYOUTS, TYPOGRAPHY } from '../../constants/theme';
 import Tab from '../../components/utils/Tab';
 import { ArrowRight2 } from 'iconsax-react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const Card = ({ image }) => {
     return (
-        <View style={{ width: '100%', backgroundColor: COLORS.primaryDark, borderRadius: 20, paddingVertical: 30, paddingHorizontal: 25, marginBottom: 20 }}>
+        <View style={{ width: '100%', backgroundColor: COLORS.primaryDark, borderRadius: 20, paddingVertical: 30, paddingHorizontal: 20, marginBottom: 20 }}>
             <Text style={[TYPOGRAPHY.Heading, { color: COLORS.primaryLight, fontSize: 25, marginBottom: 8 }]}>Lorem Ipsum</Text>
             <Text style={[TYPOGRAPHY.Body, { color: COLORS.primaryLight, fontSize: 14 }]}>
                 Holiday would be declared on 30th Nov 2023, according
@@ -25,35 +26,44 @@ const Card = ({ image }) => {
     )
 }
 
+const CollegeNotices = memo(() => {
+    return (
+        <View style={{ width: "100%" }}>
+            <Card image={true} />
+            <Card image={false} />
+            <Card image={true} />
+        </View>
+    )
+});
+
+const ClassNotices = memo(() => {
+    return (
+        <View style={{ width: '100%' }}>
+            <Text>Class room updates</Text>
+        </View>
+    );
+})
+
 const CollgeNoticeView = () => {
     const tabs = ["College", "Classroom"];
     const [active, setActive] = useState(tabs[0]);
 
     return (
-        <View style={[LAYOUTS.flexCenter, { backgroundColor: COLORS.primaryLight, position: "relative", paddingBottom: 60 }]}>
+        <SafeAreaView style={[LAYOUTS.flexCenter, LAYOUTS.screenView, { backgroundColor: COLORS.primaryLight, position: "relative", paddingBottom: 60 }]}>
             <StatusBar style={"dark"} />
 
-            <View style={[LAYOUTS.screenView, { marginVertical: 40 }]}>
-                <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between", marginBottom: 20, marginTop: 10 }}>
-                    {tabs.map((item, idx) => (
-                        <Tab key={idx} title={item} isActive={active === item} switchTab={() => setActive(item)} />
-                    ))}
-                </View>
-                <ScrollView>
-                    {active === tabs[0] ? (
-                        <View style={{ width: '100%' }}>
-                            <Card image={true} />
-                            <Card image={false} />
-                            <Card image={true} />
-                        </View>
-                    ) : (
-                        <View style={{ width: '100%', marginTop: 30 }}>
-                            <Text>Class room updates</Text>
-                        </View>
-                    )}
-                </ScrollView>
+            <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between", marginBottom: 20, marginTop: 10 }}>
+                {tabs.map((item, idx) => (
+                    <Tab key={idx} title={item} isActive={active === item} switchTab={() => setActive(item)} />
+                ))}
             </View>
-        </View>
+            <ScrollView>
+                {active === tabs[0]
+                    ? <CollegeNotices />
+                    : <ClassNotices />
+                }
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 

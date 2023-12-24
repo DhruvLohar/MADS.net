@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 });
 
 const Student = () => {
-    const {location, refreshLocation} = useGeoLocation();
+    const [location, refreshLocation] = useGeoLocation();
 
     return (
         <SafeAreaView style={styles.container}>

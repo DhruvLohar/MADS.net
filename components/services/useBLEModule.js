@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { BleManager, State as BleState } from "react-native-ble-plx";
 import { PermissionsAndroid } from "react-native";
 import * as ExpoDevice from "expo-device";
+import { useMemo } from "react";
 
 const useBLEModule = () => {
-  const [bleManager, setBLEManager] = useState(null);
+  const bleManager = useMemo(() => new BleManager(), []);
   const [scannedDevices, setScannedDevices] = useState([]);
   const [scanning, setScanning] = useState(false);
 
@@ -65,11 +66,10 @@ const useBLEModule = () => {
 
   useEffect(() => {
     const initializeBLEManager = async () => {
-      // const status = await requestPermissions();
+      await requestPermissions();
 
       // if (status) {
       //   const manager = new BleManager();
-      //   console.log(manager)
       //   setBLEManager(manager);
       // }
     };
@@ -115,9 +115,7 @@ const useBLEModule = () => {
     }
   };
 
-  return {
-    requestPermissions
-  };
+  return [scannedDevices, scanning, startScan, stopScan];
 };
 
 export default useBLEModule;

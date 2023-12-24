@@ -4,24 +4,34 @@
     "description": "network",
     "scheme": "acme",
     "plugins": [
-      [
-        "@config-plugins/react-native-ble-plx",
-        {
-          "isBackgroundEnabled": true,
-          "modes": ["peripheral", "central"],
-          "bluetoothAlwaysPermission": "Allow MADS.net to connect to bluetooth devices"
-        }
-      ]
+      "react-native-ble-plx"
     ],
     "web": {
       "bundler": "metro"
     },
-    "slug": "linkIt",
+    "slug": "madsnet",
     "ios": {
       "supportsTablet": true
     },
-    "android": {  
-      "package": "com.example.MADSnet"
-    }
+    "android": {
+      "package": "com.example.MADSnet",
+      "permissions": [
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.INTERNET"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0341a0ef-2b83-4792-af2c-1f9e094763b8"
+      }
+    },
+    "owner": "madsnet"
   }
 }

@@ -13,7 +13,9 @@ const useGeoLocation = () => {
         let currentPosition = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.BestForNavigation
         });
-        setLocation(currentPosition)
+        if (currentPosition) {
+            setLocation(currentPosition)
+        }
     }
 
     const refreshLocation = () => {
@@ -24,7 +26,7 @@ const useGeoLocation = () => {
         getLocation();
     }, []);
 
-    return { location, refreshLocation };
+    return [ location, refreshLocation ];
 }
 
 export default useGeoLocation;

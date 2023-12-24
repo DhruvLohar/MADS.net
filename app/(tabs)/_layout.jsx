@@ -1,9 +1,10 @@
 import { Tabs, usePathname, useRouter } from "expo-router";
-import { StyleSheet, View, Text, SafeAreaView, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { COLORS, TYPOGRAPHY } from "../../constants/theme";
 import { AddSquare, Crown, Home, Message, Notification } from "iconsax-react-native";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default () => {
 
@@ -23,17 +24,15 @@ export default () => {
         const currentTab = tabs.find((tab) => tab.name === path.replace("/", ""));
 
         return (
-            <SafeAreaView>
-                <View style={styles.tabHeader}>
-                    <StatusBar style="dark" translucent={false} backgroundColor={COLORS.primaryLight} />
-                    <Text style={[TYPOGRAPHY.Header, {color: COLORS.primaryDark}]}>{currentTab?.title}</Text>
+            <SafeAreaView style={styles.tabHeader}>
+                <StatusBar style="dark" translucent={false} backgroundColor={COLORS.primaryLight} />
+                <Text style={[TYPOGRAPHY.Header, { color: COLORS.primaryDark }]}>{currentTab?.title}</Text>
 
-                    <TouchableOpacity style={{ marginLeft: "auto" }} onPress={() => route.push('/profile/1')}>
-                        <View>
-                            <Image source={require("../../assets/profile.jpeg")} style={styles.profileImage} />
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity style={{ marginLeft: "auto" }} onPress={() => route.push('/profile/1')}>
+                    <View>
+                        <Image source={require("../../assets/profile.jpeg")} style={styles.profileImage} />
+                    </View>
+                </TouchableOpacity>
             </SafeAreaView>
         );
     }
@@ -97,8 +96,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
     profileImage: {
-        width: 44, 
-        height: 44, 
+        width: 44,
+        height: 44,
         resizeMode: "contain",
         borderRadius: 22
     }

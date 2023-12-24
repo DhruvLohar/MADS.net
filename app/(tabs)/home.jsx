@@ -5,6 +5,7 @@ import { COLORS, LAYOUTS, TYPOGRAPHY } from '../../constants/theme';
 import { Directions, FlingGestureHandler, State } from 'react-native-gesture-handler';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const HomeView = () => {
   const [current, setCurrent] = useState('black');
@@ -29,30 +30,25 @@ const HomeView = () => {
   };
 
   return (
-    <>
-      <View style={[LAYOUTS.flexCenter, { backgroundColor: COLORS.primaryLight, position: "relative", }]}>
-        <StatusBar style={"dark"} />
+    <SafeAreaView style={[LAYOUTS.flexCenter, LAYOUTS.screenView, { backgroundColor: COLORS.primaryLight, position: "relative", }]}>
+      <StatusBar style={"dark"} />
 
-        <View style={[LAYOUTS.screenView, { marginTop: 30 }]}>
-          <Text style={TYPOGRAPHY.Heading}>Hi, {name}!</Text>
-          <Text style={TYPOGRAPHY.Body}>Check out what others students are up to ...</Text>
+      <Text style={TYPOGRAPHY.Heading}>Hi, {name ? name : "User"}!</Text>
+      <Text style={TYPOGRAPHY.Body}>Check out what others students are up to ...</Text>
 
-          <FlingGestureHandler direction={Directions.RIGHT}
-            onHandlerStateChange={handleSwipeRight}
-          >
-            <FlingGestureHandler direction={Directions.LEFT} 
-              onHandlerStateChange={handleSwipeLeft}>
+      <FlingGestureHandler direction={Directions.RIGHT}
+        onHandlerStateChange={handleSwipeRight}
+      >
+        <FlingGestureHandler direction={Directions.LEFT}
+          onHandlerStateChange={handleSwipeLeft}>
 
-              <View style={{ width: "100%", marginTop: 20 }}>
-                <View style={{ width: "100%", height: 200, borderRadius: 20, backgroundColor: current }}></View>
-              </View>
+          <View style={{ width: "100%", marginTop: 20 }}>
+            <View style={{ width: "100%", height: 200, borderRadius: 20, backgroundColor: current }}></View>
+          </View>
 
-            </FlingGestureHandler>
-          </FlingGestureHandler>
-
-        </View>
-      </View>
-    </>
+        </FlingGestureHandler>
+      </FlingGestureHandler>
+    </SafeAreaView>
   );
 }
 
