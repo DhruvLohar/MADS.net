@@ -5,10 +5,9 @@ import { SafeAreaView, Text, StyleSheet, Platform } from "react-native";
 import Button from "../components/utils/Button";
 import { COLORS, TYPOGRAPHY } from "../constants/theme";
 
-import * as ExpoDevice from "expo-device";
 import { PermissionsAndroid } from "react-native";
 import { BleManager } from "react-native-ble-plx";
-import useBLEModule from "../components/services/useBLEModule";
+// import useBLEModule from "../components/services/useBLEModule";
 
 
 import { hello } from "../modules/expo-ble-manager";
