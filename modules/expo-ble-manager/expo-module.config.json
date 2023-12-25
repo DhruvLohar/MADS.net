@@ -1,0 +1,9 @@
+{
+  "platforms": ["ios", "android", "web"],
+  "ios": {
+    "modules": ["ExpoBleManagerModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.blemanager.ExpoBleManagerModule"]
+  }
+}
