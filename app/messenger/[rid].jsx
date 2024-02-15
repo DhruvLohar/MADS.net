@@ -5,30 +5,42 @@ import { StatusBar } from 'expo-status-bar';
 import { useGlobalSearchParams, useRouter } from "expo-router";
 import { ArrowLeft2, DirectRight } from 'iconsax-react-native';
 import { COLORS, LAYOUTS, TYPOGRAPHY } from '../../constants/theme';
+import { API_URL } from '../../components/services/api';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+const TextMessage = ({ username, text, self }) => {
+    return (
+        <View style={[styles.textMessageContainer, self && styles.textSelf, !self && styles.textUser]}>
+            <Text>{username}: {text}</Text>
+        </View>
+    )
+}
 
 const Messenger = () => {
     const { rid } = useGlobalSearchParams();
     const router = useRouter();
 
     const [msgToSend, setMsgToSend] = useState(null);
-    const [messages, setMessages] = useState(["Start of the convo"]);
+    const [messages, setMessages] = useState([]);
 
     const [webSocket, setWebSocket] = useState();
 
     const handleSendMessage = () => {
         if (webSocket) {
-            messages.push("Me : " + msgToSend);
+            // messages.push("Me : " + msgToSend);
+            messages.push({username: "Dhruv", text: msgToSend, self: true})
             webSocket.send(JSON.stringify({username: "Dhruv", message: msgToSend}));
             setMsgToSend(null);
         }
     }
 
     const handleIncomingMessage = (payload) => {
-        setMessages(prev => [...prev, payload.username + " : " + payload.message])
+        // setMessages(prev => [...prev, payload.username + " : " + payload.message])
+        setMessages(prev => [...prev, {username: payload.username, text: payload.message, self: false}])
     }
 
     useEffect(() => {
-        const socket = new WebSocket(`ws://192.168.1.4:8000/ws/messenger/${rid}/`);
+        const socket = new WebSocket(`ws://192.168.1.3:8000/ws/messenger/3d4d8495-fb6f-481c-98c9-3aa3822babd4/`);
         
         socket.onopen = () => {
             console.log("Connected to server.");
@@ -42,7 +54,7 @@ const Messenger = () => {
     }, [])
 
     return (
-        <View style={[LAYOUTS.screenView, { alignItems: 'center', backgroundColor: COLORS.primaryLight, paddingHorizontal: 0, position: "relative" }]}>
+        <SafeAreaView style={[LAYOUTS.screenView, { alignItems: 'center', backgroundColor: COLORS.primaryLight, paddingHorizontal: 0, position: "relative" }]}>
             <StatusBar style={"light"} backgroundColor={COLORS.primary} translucent={false} />
 
             <View style={styles.body}>
@@ -61,7 +73,8 @@ const Messenger = () => {
 
             <ScrollView style={{ width: "100%", marginBottom: 70 }}>
                 {messages.map((message, i) => (
-                    <Text key={i}> {message} </Text>
+                    // <Text key={i}> {message} </Text>
+                    <TextMessage key={i} username={message.username} text={message.text} self={message.self} />
                 ))}
             </ScrollView>
 
@@ -80,7 +93,7 @@ const Messenger = () => {
                     <DirectRight size={26} rotation={-28} color={COLORS.primaryLight} />
                 </TouchableOpacity>
             </View>
-        </View>
+        </SafeAreaView>
 
     );
 }
@@ -100,7 +113,7 @@ const styles = StyleSheet.create({
         width: 50, height: 50, borderRadius: 25, backgroundColor: COLORS.primaryDark,
     },
     input: {
-        width: "83%",
+        width: "80%",
         paddingHorizontal: 20,
         paddingVertical: 14,
         borderRadius: 40,
@@ -110,8 +123,35 @@ const styles = StyleSheet.create({
         marginRight: 5
     },
     sendIcon: {
-        width: 50, height: 50,
-        borderRadius: 25, justifyContent: "center", alignItems: "center",
+        width: 60, height: 60,
+        borderRadius: 30, justifyContent: "center", alignItems: "center",
         backgroundColor: COLORS.primary
+    },
+
+    textMessageContainer: {
+        flex: 1,
+        width: "100%",
+        maxWidth: 200,
+        justifyContent: "center",
+
+        paddingHorizontal: 10,
+        paddingVertical: 20,
+        marginBottom: 10,
+
+        borderRadius: 10,
+    },
+    textSelf: {
+        alignItems: "flex-end",
+
+        backgroundColor: COLORS.primaryLight,
+        color: COLORS.primaryDark,
+        borderTopRightRadius: 0
+    },
+    textUser: {
+        alignItems: "flex-start",
+
+        backgroundColor: COLORS.primaryDark,
+        color: COLORS.primaryLight,
+        borderTopLeftRadius: 0
     }
 })
