@@ -1,0 +1,92 @@
+{
+  "studentInfo": [
+    {
+      "name": "Mohit",
+      "number": "#1",
+      "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+      "madsPoints": 69
+    },
+    {
+      "name": "Sahil",
+      "number": "#2",
+      "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+      "madsPoints": 69
+    },
+    {
+      "name": "Aadish",
+      "number": "#3",
+      "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+      "madsPoints": 69
+    },
+    {
+      "name": "Mohit Jain",
+      "number": "#4",
+      "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+      "madsPoints": 69
+    },
+    {
+      "name": "Mohit Jain",
+      "number": "#5",
+      "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+      "madsPoints": 69
+    },
+    {
+      "name": "Mohit Jain",
+      "number": "#6",
+      "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+      "madsPoints": 69
+    },
+    {
+      "name": "Mohit Jain",
+      "number": "#7",
+      "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+      "madsPoints": 69
+    },
+    {
+      "name": "Dhruv Lohar",
+      "number": "#8",
+      "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+      "madsPoints": 69
+    },
+    {
+      "name": "Dhruv Lohar",
+      "number": "#9",
+      "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+      "madsPoints": 69
+    },
+    {
+      "name": "Kaajal Sharma",
+      "number": "#10",
+      "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+      "madsPoints": 69
+    }
+  ],
+  "pageData": {
+    "date": {
+      "startDate": "2023-11-21",
+      "endDate": "2024-2-21"
+    },
+    "status": "Completed",
+    "submissions": "69",
+    "Title": "Instagram Clone Web App",
+    "images": [
+      "https://picsum.photos/id/1015/400/300",
+      "https://picsum.photos/id/1018/400/300",
+      "https://picsum.photos/id/1019/400/300",
+      "https://picsum.photos/id/1019/400/300"
+    ],
+    "rules": [
+      "Supposed to be a web app.",
+      "Any web framework can be used.",
+      "No need of adding backend functionality.",
+      "only a working frontend is expected."
+    ],
+    "infoList": [
+      "14 days left!",
+      "Frontend",
+      "AI/ML",
+      "Data Analytics",
+      "Web Based App"
+    ]
+  }
+}
