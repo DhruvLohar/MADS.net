@@ -40,7 +40,7 @@ const Messenger = () => {
     }
 
     useEffect(() => {
-        const socket = new WebSocket(`ws://192.168.1.3:8000/ws/messenger/3d4d8495-fb6f-481c-98c9-3aa3822babd4/`);
+        const socket = new WebSocket(`ws://172.20.10.3:8000/ws/messenger/3d4d8495-fb6f-481c-98c9-3aa3822babd4/`);
         
         socket.onopen = () => {
             console.log("Connected to server.");
@@ -139,12 +139,14 @@ const styles = StyleSheet.create({
         marginBottom: 10,
 
         borderRadius: 10,
+        color: COLORS.primaryLight,
+        marginHorizontal: 20
     },
     textSelf: {
         alignItems: "flex-end",
 
         backgroundColor: COLORS.primaryLight,
-        color: COLORS.primaryDark,
+        color: COLORS.primaryLight,
         borderTopRightRadius: 0
     },
     textUser: {
