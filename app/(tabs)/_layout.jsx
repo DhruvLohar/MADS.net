@@ -9,28 +9,41 @@ import {
   Notification,
 } from "iconsax-react-native";
 import { StatusBar } from "expo-status-bar";
-import { useContext, useState } from "react";
+import { memo, useContext, useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ConditionContext, {
   ConditionProvider,
 } from "../../condition/conditionsContext";
 
-export default () => {
-  const tabs = [
-    { name: "home", title: "Home", Icon: Home },
-    { name: "madsWeek", title: "MADS Week", Icon: Crown },
-    { name: "addProject", title: "Add Project", Icon: AddSquare },
-    { name: "collegeNotice", title: "Notifications", Icon: Notification },
-    { name: "community", title: "Community", Icon: Message },
-  ];
-  // const [activeTab, setActiveTab] = useState(tabs[0]);
+const TabIcon = memo(({ Icon, focused }) => {
+  return (
+    <View style={styles.container}>
+      <Icon
+        size={focused ? 28 : 24}
+        variant={focused ? "Bold" : "Outline"}
+        color={COLORS.primaryLight}
+      />
+    </View>
+  );
+});
 
-  const TabHeader = () => {
-    const route = useRouter();
+export default _layout = () => {
+  
+  const tabs = useMemo(() => new Map([
+    ["home", { title: "Home", name: "home", Icon: Home }],
+    ["madsWeek", { title: "MADS Week", name: "madsWeek", Icon: Crown }],
+    ["addProject", { title: "Add Project", name: "addProject", Icon: AddSquare }],
+    ["collegeNotice", { title: "Notifications", name: "collegeNotice", Icon: Notification }],
+    ["community", { title: "Community", name: "community", Icon: Message }],
+  ]), []);
+
+  const TabHeader = memo(({ route }) => {
+    // const route = useRouter();
     const path = usePathname();
     const { isConditionMet } = useContext(ConditionContext);
 
-    const currentTab = tabs.find((tab) => tab.name === path.replace("/", ""));
+    // const currentTab = tabs.find((tab) => tab.name === path.replace("/", ""));
+    const currentTab = tabs.get(route.params.title)
 
     return (
       <SafeAreaView
@@ -80,7 +93,7 @@ export default () => {
         </TouchableOpacity>
       </SafeAreaView>
     );
-  };
+  });
 
   return (
     <ConditionProvider>
@@ -91,26 +104,25 @@ export default () => {
           headerStyle: {
             backgroundColor: COLORS.primaryLight,
           },
-          header: () => <TabHeader />,
+          header: ({ route }) => <TabHeader route={route} />,
         }}
       >
-        {tabs.map((item, idx) => (
+        {Array.from(tabs.values()).map((item, idx) => (
           <Tabs.Screen
             key={idx}
             name={item.name}
+            initialParams={{ title: item.name }}
             options={{
               title: item.title,
               tabBarShowLabel: false,
               tabBarIcon: ({ focused }) => {
-                return (
-                  <View style={[styles.container]}>
-                    <item.Icon
-                      size={focused ? 28 : 24}
-                      variant={focused ? "Bold" : "Outline"}
-                      color={COLORS.primaryLight}
-                    />
-                  </View>
-                );
+                if (item.Icon) {
+                  return <TabIcon focused={focused} Icon={item.Icon} />;
+                } else {
+                  // Handle missing icon gracefully
+                  console.warn("Missing icon for tab:", item.title);
+                  return null;
+                }
               },
             }}
           />

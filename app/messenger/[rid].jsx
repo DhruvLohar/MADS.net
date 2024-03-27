@@ -7,11 +7,29 @@ import { ArrowLeft2, DirectRight } from 'iconsax-react-native';
 import { COLORS, LAYOUTS, TYPOGRAPHY } from '../../constants/theme';
 import { API_URL } from '../../components/services/api';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import useAxios from '../../components/services/useAxios';
+import { WS_URL } from '../../context/Auth';
 
-const TextMessage = ({ username, text, self }) => {
+const TextMessage = ({ username, text, self, aboveIsSelf }) => {
+    const bubbleStyle = {
+        alignSelf: self ? 'flex-end' : 'flex-start',
+        backgroundColor: self ? COLORS.primary : COLORS.primaryDark,
+        borderTopRightRadius: (self && self !== aboveIsSelf) ? 0 : 25,
+        borderTopLeftRadius: (!self && self !== aboveIsSelf) ? 0 : 25,
+        marginTop: (self !== aboveIsSelf) ? 10 : 0
+    };
+
     return (
-        <View style={[styles.textMessageContainer, self && styles.textSelf, !self && styles.textUser]}>
-            <Text>{username}: {text}</Text>
+        <View>
+            {self || (self === aboveIsSelf) ? (null) : (
+                <View style={{flexDirection: "row", justifyContent: "flex-start", alignItems: "center", opacity: .6}}>
+                    <View style={{width: 15, height: 15, backgroundColor: "black", borderRadius: 100, marginRight: 5}}></View>
+                    <Text style={{ fontSize: 15 }}>{username}</Text>
+                </View>
+            )}
+            <View style={[textBubbleStyles.container, bubbleStyle]}>
+                <Text style={{color: COLORS.primaryLight}}>{text}</Text>
+            </View>
         </View>
     )
 }
@@ -19,6 +37,8 @@ const TextMessage = ({ username, text, self }) => {
 const Messenger = () => {
     const { rid } = useGlobalSearchParams();
     const router = useRouter();
+
+    const { data, error, loaded } = useAxios(`messenger/${rid}/`)
 
     const [msgToSend, setMsgToSend] = useState(null);
     const [messages, setMessages] = useState([]);
@@ -28,20 +48,20 @@ const Messenger = () => {
     const handleSendMessage = () => {
         if (webSocket) {
             // messages.push("Me : " + msgToSend);
-            messages.push({username: "Dhruv", text: msgToSend, self: true})
-            webSocket.send(JSON.stringify({username: "Dhruv", message: msgToSend}));
+            messages.push({ username: "Dhruv", text: msgToSend, self: true })
+            webSocket.send(JSON.stringify({ username: "Dhruv", message: msgToSend }));
             setMsgToSend(null);
         }
     }
 
     const handleIncomingMessage = (payload) => {
         // setMessages(prev => [...prev, payload.username + " : " + payload.message])
-        setMessages(prev => [...prev, {username: payload.username, text: payload.message, self: false}])
+        setMessages(prev => [...prev, { username: payload.username, text: payload.message, self: false }])
     }
 
     useEffect(() => {
-        const socket = new WebSocket(`ws://172.20.10.3:8000/ws/messenger/3d4d8495-fb6f-481c-98c9-3aa3822babd4/`);
-        
+        const socket = new WebSocket(`${WS_URL}/ws/messenger/${rid}/`);
+
         socket.onopen = () => {
             console.log("Connected to server.");
             setWebSocket(socket);
@@ -55,44 +75,49 @@ const Messenger = () => {
 
     return (
         <SafeAreaView style={[LAYOUTS.screenView, { alignItems: 'center', backgroundColor: COLORS.primaryLight, paddingHorizontal: 0, position: "relative" }]}>
-            <StatusBar style={"light"} backgroundColor={COLORS.primary} translucent={false} />
+            {loaded ? (
+                <>
+                    <StatusBar style={"light"} backgroundColor={COLORS.primary} translucent={false} />
 
-            <View style={styles.body}>
-                <TouchableOpacity onPress={() => router.back()}>
-                    <ArrowLeft2 size={30} color={COLORS.primaryLight} />
-                </TouchableOpacity>
+                    <View style={styles.body}>
+                        <TouchableOpacity onPress={() => router.back()}>
+                            <ArrowLeft2 size={30} color={COLORS.primaryLight} />
+                        </TouchableOpacity>
 
-                <View style={styles.image}></View>
-                <View style={{ marginLeft: 15 }}>
-                    <Text style={[TYPOGRAPHY.Body, { color: COLORS.primaryLight, fontSize: 16, fontFamily: "Poppins_500Medium" }]}>CESS & CodeCell</Text>
-                    <Text style={[TYPOGRAPHY.Body, { color: COLORS.primaryLight, fontSize: 12 }]}>
-                        14 online
-                    </Text>
-                </View>
-            </View>
+                        <View style={styles.image}>
+                            <Image source={{ uri: data.logo }} style={{ width: "100%", height: "100%" }} />
+                        </View>
+                        <View style={{ marginLeft: 15 }}>
+                            <Text style={[TYPOGRAPHY.Body, { color: COLORS.primaryLight, fontSize: 16, fontFamily: "Poppins_500Medium" }]}>{data.title}</Text>
+                            <Text style={[TYPOGRAPHY.Body, { color: COLORS.primaryLight, fontSize: 12 }]}>
+                                {data.description}
+                            </Text>
+                        </View>
+                    </View>
 
-            <ScrollView style={{ width: "100%", marginBottom: 70 }}>
-                {messages.map((message, i) => (
-                    // <Text key={i}> {message} </Text>
-                    <TextMessage key={i} username={message.username} text={message.text} self={message.self} />
-                ))}
-            </ScrollView>
+                    <ScrollView style={{ width: "100%", marginBottom: 70, paddingHorizontal: 10 }}>
+                        {messages.map((message, i) => (
+                            <TextMessage key={i} username={message.username} text={message.text} self={message.self} aboveIsSelf={i > 0 ? messages[i-1].self : false} />
+                        ))}
+                    </ScrollView>
 
-            <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", position: "absolute", bottom: 5 }}>
-                <TextInput
-                    style={[styles.input, TYPOGRAPHY.Body, { color: COLORS.primaryLight }]}
-                    placeholder={"Write your message ..."} autoComplete={"off"}
-                    placeholderTextColor='gray'
-                    textAlignVertical='center'
+                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", position: "absolute", bottom: 5 }}>
+                        <TextInput
+                            style={[styles.input, TYPOGRAPHY.Body, { color: COLORS.primaryLight }]}
+                            placeholder={"Write your message ..."} autoComplete={"off"}
+                            placeholderTextColor='gray'
+                            textAlignVertical='center'
 
-                    onChangeText={(text) => setMsgToSend(text)}
-                    value={msgToSend}
-                />
+                            onChangeText={(text) => setMsgToSend(text)}
+                            value={msgToSend}
+                        />
 
-                <TouchableOpacity activeOpacity={.7} style={styles.sendIcon} onPress={handleSendMessage}>
-                    <DirectRight size={26} rotation={-28} color={COLORS.primaryLight} />
-                </TouchableOpacity>
-            </View>
+                        <TouchableOpacity activeOpacity={.7} style={styles.sendIcon} onPress={handleSendMessage}>
+                            <DirectRight size={26} rotation={-28} color={COLORS.primaryLight} />
+                        </TouchableOpacity>
+                    </View>
+                </>
+            ) : (<Text>Loading</Text>)}
         </SafeAreaView>
 
     );
@@ -127,33 +152,14 @@ const styles = StyleSheet.create({
         borderRadius: 30, justifyContent: "center", alignItems: "center",
         backgroundColor: COLORS.primary
     },
+})
 
-    textMessageContainer: {
-        flex: 1,
-        width: "100%",
-        maxWidth: 200,
-        justifyContent: "center",
-
-        paddingHorizontal: 10,
-        paddingVertical: 20,
-        marginBottom: 10,
-
-        borderRadius: 10,
-        color: COLORS.primaryLight,
-        marginHorizontal: 20
-    },
-    textSelf: {
-        alignItems: "flex-end",
-
-        backgroundColor: COLORS.primaryLight,
-        color: COLORS.primaryLight,
-        borderTopRightRadius: 0
-    },
-    textUser: {
-        alignItems: "flex-start",
-
-        backgroundColor: COLORS.primaryDark,
-        color: COLORS.primaryLight,
-        borderTopLeftRadius: 0
+const textBubbleStyles = StyleSheet.create({
+    container: {
+        maxWidth: '80%',
+        paddingHorizontal: 20,
+        paddingVertical: 16,
+        borderRadius: 25,
+        marginBottom: 4,
     }
 })

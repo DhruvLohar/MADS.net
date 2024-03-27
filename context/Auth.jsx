@@ -3,7 +3,10 @@ import axios from "axios"
 import { createContext, useContext, useEffect, useReducer, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const API_URL = "http://192.168.1.2:8000/";
+const domain = "192.168.1.2:8000"
+export const API_URL = `http://${domain}/`;
+export const WS_URL = `ws://${domain}`
+
 export const AuthContext = createContext()
 
 export const useAuth = () => {
