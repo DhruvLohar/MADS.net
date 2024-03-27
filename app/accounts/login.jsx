@@ -1,7 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Button, { TextButton } from "../../components/utils/Button";
 import Input from "../../components/utils/Input";
@@ -9,43 +8,23 @@ import { COLORS, LAYOUTS, TYPOGRAPHY } from '../../constants/theme';
 import { useRouter } from 'expo-router';
 import { Lock, Sms } from 'iconsax-react-native';
 
-import axios from 'axios';
 import { Formik } from 'formik';
-import { API_URL, axiosAuthorized, axiosInstance } from '../../components/services/api';
+import { useAuth } from '../../context/Auth';
 
 const LoginView = () => {
+
     const router = useRouter();
+    const { onLogin } = useAuth()
 
-    const initialValues = {
-        email: '',
-        password: ''
-    }
+    const handleLogin = async (values) => {
+        // router.push('/home');
+        const { data, error } = await onLogin(values.email, values.password);
+        if (!error) {
+            router.push('/home')
+        } else {
+            alert(data)
+        }
     
-    const setStorage = async (data) => {
-        await AsyncStorage.setItem('userId', data.id.toString())
-        await AsyncStorage.setItem('name', data.name)
-        await AsyncStorage.setItem('token', data.token)
-    }
-
-    const handleLogin = (values) => {
-        // await AsyncStorage.setItem("name", "Dhruv");
-        // error.response.data.message
-        axios.post(API_URL +  "/student/login/", values)
-            .then(response => {
-                setStorage(response.data);
-                router.push('/home');
-            })
-            .catch(error => {
-                if (error.response) {
-                    console.log("Error Status Code:", error.response.status);
-                    console.log("Error Response Data:", error.response.data);
-                    alert(error.response.data.message);
-                } else if (error.request) {
-                    console.log("No response received");
-                } else {
-                    console.log("Error:", error.message);
-                }
-            })
     }
 
     return (

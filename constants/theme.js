@@ -6,6 +6,9 @@ const COLORS = {
 };
 
 const LAYOUTS = {
+  flexRowCenter: {
+    flexDirection: 'row', alignItems: "center", justifyContent: "center"
+  },
   flexCenter: {
     flex: 1,
     alignItems: "center",

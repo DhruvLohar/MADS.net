@@ -8,14 +8,16 @@ import {
   Image,
   Dimensions,
   ScrollView,
+  Pressable,
 } from "react-native";
 import { COLORS, LAYOUTS, TYPOGRAPHY } from "../../constants/theme";
 import InfoPill from "../../components/utils/InfoPill";
 
-import { useGlobalSearchParams } from "expo-router";
+import { useRouter, useGlobalSearchParams } from "expo-router";
 import Tab from "../../components/utils/Tab";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Setting2 } from "iconsax-react-native";
+import { Setting, Setting2 } from "iconsax-react-native";
+import { useAuth } from "../../context/Auth";
 
 const ProjectList = [
   {
@@ -101,11 +103,19 @@ const ShowDetails = memo(() => {
 
 const Profile = () => {
   const { id } = useGlobalSearchParams();
+  const router = useRouter()
+
+  const { onLogout } = useAuth()
 
   const tabs = ["Details", "Projects"];
   const [active, setActive] = useState(tabs[0]);
 
   const ActiveTab = useMemo(() => {}, [active]);
+
+  const handleLogout = async () => {
+    onLogout()
+    router.push('/accounts/login')
+  }
 
   return (
     <SafeAreaView
@@ -125,7 +135,12 @@ const Profile = () => {
         source={require("../../assets/profile.jpeg")}
       />
 
-      <Text style={TYPOGRAPHY.Heading}>Sara Jones</Text>
+      <View style={LAYOUTS.flexRowCenter}>
+        <Text style={[TYPOGRAPHY.Heading, {marginRight: 10}]}>Sara Jones</Text>
+        <Pressable onPress={handleLogout}>
+          <Setting color={COLORS.primaryDark} size={26} style={{marginVertical: "auto"}} />
+        </Pressable>
+      </View>
       <Text style={[TYPOGRAPHY.Body, { textAlign: "center" }]}>
         Love learning about fullstack development and exploring Artifical
         Intelligence

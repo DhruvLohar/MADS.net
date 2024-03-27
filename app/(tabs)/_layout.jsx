@@ -23,7 +23,7 @@ export default () => {
     { name: "collegeNotice", title: "Notifications", Icon: Notification },
     { name: "community", title: "Community", Icon: Message },
   ];
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  // const [activeTab, setActiveTab] = useState(tabs[0]);
 
   const TabHeader = () => {
     const route = useRouter();

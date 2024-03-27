@@ -6,7 +6,7 @@ import { StyleSheet } from "react-native";
 const InfoPill = ({ text }) => {
   return (
     <View style={style.pill}>
-      <Text style={{ color: COLORS.primaryLight, fontSize: 12 }}>{text}</Text>
+      <Text style={{ color: COLORS.primaryLight, fontSize: 14 }}>{text}</Text>
     </View>
   );
 };
@@ -20,9 +20,9 @@ const style = StyleSheet.create({
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 10,
+    paddingHorizontal: 14,
     paddingVertical: 5,
-    marginRight: 16,
-    marginVertical: 7,
+    marginRight: 8,
+    marginVertical: 5,
   },
 });
