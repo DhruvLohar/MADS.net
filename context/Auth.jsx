@@ -2,9 +2,8 @@ import axios from "axios"
 
 import { createContext, useContext, useEffect, useReducer, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_URL } from "../components/services/api";
 
-
+export const API_URL = "http://192.168.1.2:8000/";
 export const AuthContext = createContext()
 
 export const useAuth = () => {
@@ -41,7 +40,7 @@ export const AuthProvider = ({children}) => {
         console.log("Processing Login : ", email, password)
         
         try {
-            const { data } = await axios.post(API_URL +  "student/login/", { email, password  })
+            const { data } = await axios.post("student/login/", { email, password  })
         
             axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
 

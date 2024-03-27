@@ -1,37 +1,61 @@
-import React, { memo, useMemo, useState } from 'react';
+import axios from "axios";
+
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { Modal, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { COLORS, LAYOUTS, TYPOGRAPHY } from '../../constants/theme';
 import Tab from '../../components/utils/Tab';
-import { ArrowRight2 } from 'iconsax-react-native';
+import { Add, ArrowRight2, DocumentDownload } from 'iconsax-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-
-const Card = ({ image }) => {
-    return (
-        <View style={{ width: '100%', backgroundColor: COLORS.primaryDark, borderRadius: 20, paddingVertical: 30, paddingHorizontal: 20, marginBottom: 20 }}>
-            <Text style={[TYPOGRAPHY.Heading, { color: COLORS.primaryLight, fontSize: 25, marginBottom: 8 }]}>Lorem Ipsum</Text>
-            <Text style={[TYPOGRAPHY.Body, { color: COLORS.primaryLight, fontSize: 14 }]}>
-                Holiday would be declared on 30th Nov 2023, according
-                to he rules and guidelines attached below.
-                ~ Principle
-            </Text>
-            {image ? (
-                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.primary, borderRadius: 20, paddingHorizontal: 20, paddingVertical: 15, marginTop: 20 }}>
-                    <Text style={[TYPOGRAPHY.BodyInfo, { color: COLORS.primaryLight, fontSize: 14 }]}>Open attachment ...</Text>
-                    <ArrowRight2 size={20} color={COLORS.primaryLight} />
-                </TouchableOpacity>
-            ) : null}
-        </View>
-    )
-}
+import useAxios from "../../components/services/useAxios";
+import NoticeCard from "../../components/utils/NoticeCard";
 
 const CollegeNotices = memo(() => {
+
+    const { data, error, loaded } = useAxios('notices/');
+
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const openModal = (image) => {
+        setSelectedImage(image);
+        setModalVisible(true);
+    }
+
+    const closeModal = () => {
+        setSelectedImage(null);
+        setModalVisible(false);
+    }
+
     return (
         <View style={{ width: "100%" }}>
-            <Card image={true} />
-            <Card image={false} />
-            <Card image={true} />
+            {loaded ? (
+                <>
+                    {data.map(notice => (
+                        <NoticeCard key={notice.id} notice={notice} viewImage={openModal} />
+                    ))}
+
+                    <Modal
+                        visible={modalVisible}
+                        transparent={true}
+                        animationType="slide"
+                        onRequestClose={closeModal}
+                    >
+                        <TouchableOpacity style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.8)' }} onPress={closeModal}>
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <Image source={{ uri: selectedImage }} style={{ width: "90%", height: "85%", borderRadius: 30, objectFit: "contain" }} />
+                                
+                                <TouchableOpacity style={{ position: 'absolute', top: 20, right: 80 }}>
+                                    <DocumentDownload color={"white"} size={32} />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ position: 'absolute', top: 20, right: 20 }} onPress={closeModal}>
+                                    <Add color={"white"} size={32} rotation={45} />
+                                </TouchableOpacity>
+                            </View>
+                        </TouchableOpacity>
+                    </Modal>
+                </>
+            ) : (<Text>Loading ...</Text>)}
         </View>
     )
 });
