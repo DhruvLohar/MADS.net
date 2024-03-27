@@ -18,6 +18,7 @@ import Tab from "../../components/utils/Tab";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Setting, Setting2 } from "iconsax-react-native";
 import { useAuth } from "../../context/Auth";
+import useAxios from "../../components/services/useAxios";
 
 const ProjectList = [
   {
@@ -93,10 +94,45 @@ const ShowProjects = memo(() => {
   ));
 });
 
-const ShowDetails = memo(() => {
+const ShowDetails = memo(({ data }) => {
+
+  const details = [
+    { label: "GR. No.", value: "SN662002372" },
+    { label: "Email", value: "dhruvlohar09@gmail.com" },
+    { label: "Conact Number", value: "+91 93217 81063" },
+    { label: "Github", value: "https://github.com/DhruvLohar", isLink: true },
+    { label: "Semester", value: "4" },
+    { label: "Div & Batch", value: "S.E A (A3)" },
+    { label: "Department", value: "Computer Science" },
+  ]
+
   return (
     <ScrollView>
-      <Text>Show Details</Text>
+      <View style={[LAYOUTS.flexCenter, { maxWidth: "100%", flexWrap: "wrap" }]}>
+        {details.map((item, i) => (
+          <View
+            style={{
+              marginBottom: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flex: 1,
+              width: "100%"
+            }}
+          >
+            <Text style={[TYPOGRAPHY.BodyInfo, { flex: 1, marginRight: "auto" }]}>{item.label}</Text>
+            <Pressable style={{
+              flex: 1,
+              fontSize: 15,
+              textAlign: "left"
+            }} onPress={() => alert("copied to clipboard")}>
+              <Text>
+                {item.value}
+              </Text>
+            </Pressable>
+          </View>
+        ))}
+      </View>
     </ScrollView>
   );
 });
@@ -105,16 +141,22 @@ const Profile = () => {
   const { id } = useGlobalSearchParams();
   const router = useRouter()
 
+  const { authState } = useAuth()
+  const { data, error, loaded } = useAxios(`student/${id}/`)
   const { onLogout } = useAuth()
 
   const tabs = ["Details", "Projects"];
   const [active, setActive] = useState(tabs[0]);
 
-  const ActiveTab = useMemo(() => {}, [active]);
+  const ActiveTab = useMemo(() => { }, [active]);
 
   const handleLogout = async () => {
     onLogout()
     router.push('/accounts/login')
+  }
+
+  if (!loaded) {
+    return <Text>Loading ...</Text>
   }
 
   return (
@@ -128,55 +170,58 @@ const Profile = () => {
       <StatusBar style={"light"} backgroundColor={COLORS.primaryDark} />
 
       {/* Header */}
-
-      <View style={styles.bgEllipse}></View>
-      <Image
-        style={styles.imageCircle}
-        source={require("../../assets/profile.jpeg")}
-      />
-
-      <View style={LAYOUTS.flexRowCenter}>
-        <Text style={[TYPOGRAPHY.Heading, {marginRight: 10}]}>Sara Jones</Text>
-        <Pressable onPress={handleLogout}>
-          <Setting color={COLORS.primaryDark} size={26} style={{marginVertical: "auto"}} />
-        </Pressable>
-      </View>
-      <Text style={[TYPOGRAPHY.Body, { textAlign: "center" }]}>
-        Love learning about fullstack development and exploring Artifical
-        Intelligence
-      </Text>
-
-      <View style={{ flexDirection: "row", marginVertical: 20 }}>
-        <View style={{ alignItems: "center", marginRight: 20 }}>
-          <Text style={[TYPOGRAPHY.Header, { opacity: 0.6 }]}>MADS POINTS</Text>
-          <Text style={TYPOGRAPHY.SubTitle}>69</Text>
-        </View>
-        <View style={{ alignItems: "center", marginLeft: 20 }}>
-          <Text style={[TYPOGRAPHY.Header, { opacity: 0.6 }]}>PROJECTS</Text>
-          <Text style={TYPOGRAPHY.SubTitle}>4</Text>
-        </View>
-      </View>
-
-      <View
-        style={{
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginBottom: 30,
-        }}
-      >
-        {tabs.map((item, idx) => (
-          <Tab
-            key={idx}
-            title={item}
-            isActive={active === item}
-            switchTab={() => setActive(item)}
+      {loaded ? (
+        <>
+          <View style={styles.bgEllipse}></View>
+          <Image
+            style={styles.imageCircle}
+            source={{ uri: data.profile_pfp }}
           />
-        ))}
-      </View>
-      <ScrollView>
-        {active === tabs[0] ? <ShowDetails /> : <ShowProjects />}
-      </ScrollView>
+
+          <View style={LAYOUTS.flexRowCenter}>
+            <Text style={[TYPOGRAPHY.Heading, { marginRight: 10 }]}>{data.name}</Text>
+            <Pressable onPress={handleLogout}>
+              <Setting color={COLORS.primaryDark} size={26} style={{ marginVertical: "auto" }} />
+            </Pressable>
+          </View>
+          <Text style={[TYPOGRAPHY.Body, { textAlign: "center" }]}>
+            {data.about}
+          </Text>
+
+          <View style={{ flexDirection: "row", marginVertical: 15 }}>
+            <View style={{ alignItems: "center", marginRight: 20 }}>
+              <Text style={[TYPOGRAPHY.Header, { opacity: 0.6 }]}>MADS POINTS</Text>
+              <Text style={TYPOGRAPHY.SubTitle}>{data.mads_points}</Text>
+            </View>
+            <View style={{ alignItems: "center", marginLeft: 20 }}>
+              <Text style={[TYPOGRAPHY.Header, { opacity: 0.6 }]}>PROJECTS</Text>
+              <Text style={TYPOGRAPHY.SubTitle}>4</Text>
+            </View>
+          </View>
+
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: 30,
+            }}
+          >
+            {tabs.map((item, idx) => (
+              <Tab
+                key={idx}
+                title={item}
+                isActive={active === item}
+                switchTab={() => setActive(item)}
+              />
+            ))}
+          </View>
+          <ScrollView>
+            {active === tabs[0] ? <ShowDetails data={data} /> : <ShowProjects />}
+          </ScrollView>
+        </>
+      ) : (<Text>Loading ...</Text>)}
+
     </SafeAreaView>
   );
 };
@@ -197,7 +242,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 200,
-    objectFit: "contain",
+    objectFit: "cover",
     borderColor: COLORS.primaryLight,
     borderWidth: 5,
     marginTop: -100,

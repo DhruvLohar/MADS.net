@@ -9,11 +9,13 @@ import {
   Notification,
 } from "iconsax-react-native";
 import { StatusBar } from "expo-status-bar";
-import { memo, useContext, useMemo, useState } from "react";
+import { memo, useContext, useEffect, useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ConditionContext, {
   ConditionProvider,
 } from "../../condition/conditionsContext";
+import { useAuth } from "../../context/Auth";
+
 
 const TabIcon = memo(({ Icon, focused }) => {
   return (
@@ -28,7 +30,9 @@ const TabIcon = memo(({ Icon, focused }) => {
 });
 
 export default _layout = () => {
-  
+
+  const { authState } = useAuth()
+
   const tabs = useMemo(() => new Map([
     ["home", { title: "Home", name: "home", Icon: Home }],
     ["madsWeek", { title: "MADS Week", name: "madsWeek", Icon: Crown }],
@@ -38,7 +42,7 @@ export default _layout = () => {
   ]), []);
 
   const TabHeader = memo(({ route }) => {
-    // const route = useRouter();
+    const router = useRouter();
     const path = usePathname();
     const { isConditionMet } = useContext(ConditionContext);
 
@@ -82,14 +86,12 @@ export default _layout = () => {
 
         <TouchableOpacity
           style={{ marginLeft: "auto" }}
-          onPress={() => route.push("/profile/1")}
+          onPress={() => router.push(`/profile/${authState?.userId}`)}
         >
-          <View>
-            <Image
-              source={require("../../assets/profile.jpeg")}
-              style={styles.profileImage}
-            />
-          </View>
+          <Image
+            source={require("../../assets/profile.jpeg")}
+            style={styles.profileImage}
+          />
         </TouchableOpacity>
       </SafeAreaView>
     );

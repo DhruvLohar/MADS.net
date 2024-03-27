@@ -8,27 +8,27 @@ import { COLORS, LAYOUTS, TYPOGRAPHY } from '../../constants/theme';
 import { API_URL } from '../../components/services/api';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useAxios from '../../components/services/useAxios';
-import { WS_URL } from '../../context/Auth';
+import { useAuth, WS_URL } from '../../context/Auth';
 
-const TextMessage = ({ username, text, self, aboveIsSelf }) => {
+const TextMessage = ({ username, text, self, aboveIsSelf, isFirst }) => {
     const bubbleStyle = {
         alignSelf: self ? 'flex-end' : 'flex-start',
         backgroundColor: self ? COLORS.primary : COLORS.primaryDark,
         borderTopRightRadius: (self && self !== aboveIsSelf) ? 0 : 25,
-        borderTopLeftRadius: (!self && self !== aboveIsSelf) ? 0 : 25,
-        marginTop: (self !== aboveIsSelf) ? 10 : 0
+        borderTopLeftRadius: ((!self && self !== aboveIsSelf) || (!self && isFirst)) ? 0 : 25,
+        marginTop: (self !== aboveIsSelf || isFirst) ? 10 : 0
     };
 
     return (
         <View>
-            {self || (self === aboveIsSelf) ? (null) : (
-                <View style={{flexDirection: "row", justifyContent: "flex-start", alignItems: "center", opacity: .6}}>
+            {(self || (self === aboveIsSelf)) && (self || !isFirst) ? (null) : (
+                <View style={{flexDirection: "row", justifyContent: "flex-start", alignItems: "center", opacity: .6, marginTop: 5}}>
                     <View style={{width: 15, height: 15, backgroundColor: "black", borderRadius: 100, marginRight: 5}}></View>
                     <Text style={{ fontSize: 15 }}>{username}</Text>
                 </View>
             )}
             <View style={[textBubbleStyles.container, bubbleStyle]}>
-                <Text style={{color: COLORS.primaryLight}}>{text}</Text>
+                <Text style={{ color: COLORS.primaryLight }}>{text}</Text>
             </View>
         </View>
     )
@@ -39,6 +39,7 @@ const Messenger = () => {
     const router = useRouter();
 
     const { data, error, loaded } = useAxios(`messenger/${rid}/`)
+    const { authState } = useAuth()
 
     const [msgToSend, setMsgToSend] = useState(null);
     const [messages, setMessages] = useState([]);
@@ -48,8 +49,8 @@ const Messenger = () => {
     const handleSendMessage = () => {
         if (webSocket) {
             // messages.push("Me : " + msgToSend);
-            messages.push({ username: "Dhruv", text: msgToSend, self: true })
-            webSocket.send(JSON.stringify({ username: "Dhruv", message: msgToSend }));
+            messages.push({ username: authState?.username, text: msgToSend, self: true })
+            webSocket.send(JSON.stringify({ username: authState?.username, message: msgToSend }));
             setMsgToSend(null);
         }
     }
@@ -97,7 +98,7 @@ const Messenger = () => {
 
                     <ScrollView style={{ width: "100%", marginBottom: 70, paddingHorizontal: 10 }}>
                         {messages.map((message, i) => (
-                            <TextMessage key={i} username={message.username} text={message.text} self={message.self} aboveIsSelf={i > 0 ? messages[i-1].self : false} />
+                            <TextMessage key={i} username={message.username} text={message.text} self={message.self} aboveIsSelf={i > 0 ? messages[i - 1].self : false} isFirst={i === 0} />
                         ))}
                     </ScrollView>
 
@@ -140,9 +141,9 @@ const styles = StyleSheet.create({
     input: {
         width: "80%",
         paddingHorizontal: 20,
-        paddingVertical: 14,
+        paddingVertical: 16,
         borderRadius: 40,
-        lineHeight: 28,
+        lineHeight: 20,
 
         backgroundColor: COLORS.primary,
         marginRight: 5

@@ -16,6 +16,8 @@ export const useAuth = () => {
 export const AuthProvider = ({children}) => {
     const [authState, setAuthState] = useState({
         token: null,
+        userId: null,
+        username: null,
         authenticated: false
     })
 
@@ -24,12 +26,17 @@ export const AuthProvider = ({children}) => {
     useEffect(() => {
         const checkSession = async () => {
             const res = await AsyncStorage.getItem('token')
-            if (res) {
+            const uid = await AsyncStorage.getItem('userid')
+            const name = await AsyncStorage.getItem('username')
+
+            if (res && uid && name) {
                 console.log("User Session Found")
 
                 axios.defaults.headers.common['Authorization'] = `Bearer ${res}`
                 setAuthState({
                     token: res,
+                    userId: uid,
+                    username: name,
                     authenticated: true
                 })
             }
@@ -64,6 +71,8 @@ export const AuthProvider = ({children}) => {
 
         setAuthState({
             token: null,
+            userId: null,
+            username: null,
             authenticated: false
         })
     }
