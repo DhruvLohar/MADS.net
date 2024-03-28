@@ -98,12 +98,12 @@ const ShowDetails = memo(({ data }) => {
 
   const details = [
     { label: "GR. No.", value: "SN662002372" },
-    { label: "Email", value: "dhruvlohar09@gmail.com" },
-    { label: "Conact Number", value: "+91 93217 81063" },
-    { label: "Github", value: "https://github.com/DhruvLohar", isLink: true },
+    { label: "Email", value: data?.email },
+    { label: "Conact Number", value: data?.contact_number },
+    // { label: "Github", value: "https://github.com/DhruvLohar", isLink: true },
     { label: "Semester", value: "4" },
-    { label: "Div & Batch", value: "S.E A (A3)" },
-    { label: "Department", value: "Computer Science" },
+    { label: "Division", value: `${data?.year.toUpperCase()} ${data?.division}` },
+    { label: "Department", value: data?.department },
   ]
 
   return (
@@ -111,6 +111,7 @@ const ShowDetails = memo(({ data }) => {
       <View style={[LAYOUTS.flexCenter, { maxWidth: "100%", flexWrap: "wrap" }]}>
         {details.map((item, i) => (
           <View
+            key={i}
             style={{
               marginBottom: 10,
               flexDirection: "row",
@@ -148,15 +149,11 @@ const Profile = () => {
   const tabs = ["Details", "Projects"];
   const [active, setActive] = useState(tabs[0]);
 
-  const ActiveTab = useMemo(() => { }, [active]);
+  // const ActiveTab = useMemo(() => { }, [active]);
 
   const handleLogout = async () => {
     onLogout()
     router.push('/accounts/login')
-  }
-
-  if (!loaded) {
-    return <Text>Loading ...</Text>
   }
 
   return (
@@ -169,9 +166,9 @@ const Profile = () => {
     >
       <StatusBar style={"light"} backgroundColor={COLORS.primaryDark} />
 
-      {/* Header */}
       {loaded ? (
         <>
+          {/* Header */}
           <View style={styles.bgEllipse}></View>
           <Image
             style={styles.imageCircle}
@@ -180,9 +177,11 @@ const Profile = () => {
 
           <View style={LAYOUTS.flexRowCenter}>
             <Text style={[TYPOGRAPHY.Heading, { marginRight: 10 }]}>{data.name}</Text>
-            <Pressable onPress={handleLogout}>
-              <Setting color={COLORS.primaryDark} size={26} style={{ marginVertical: "auto" }} />
-            </Pressable>
+            {authState?.userId === id && (
+              <Pressable onPress={handleLogout}>
+                <Setting color={COLORS.primaryDark} size={26} style={{ marginVertical: "auto" }} />
+              </Pressable>
+            )}
           </View>
           <Text style={[TYPOGRAPHY.Body, { textAlign: "center" }]}>
             {data.about}

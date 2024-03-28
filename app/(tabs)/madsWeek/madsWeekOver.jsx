@@ -1,135 +1,186 @@
 import React from "react";
+import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import { Medal } from "iconsax-react-native";
-import { COLORS, TYPOGRAPHY } from "../../../constants/theme";
+import { COLORS, TYPOGRAPHY, LAYOUTS } from "../../../constants/theme";
 import { FlatList } from "react-native";
-// import { data } from "./data";
-const MadsWeekOver = ({ data }) => {
-  const topThreeData = [
-    {
-      name: data[1].name,
-      madsPoints: data[1].madsPoints,
-      image: data[1].image,
-      nameSize: 18,
-      pointSize: 12,
-      medalSize: 85,
-      medalTextSize: 28,
-      medalTextPadding: 12,
-      rank: 2,
-      medalColor: "#C0C0C0",
-    },
-    {
-      name: data[0].name,
-      madsPoints: data[0].madsPoints,
-      image: data[0].image,
-      nameSize: 24,
-      pointSize: 13,
-      medalSize: 110,
-      medalTextSize: 38,
-      medalTextPadding: 10,
-      rank: 1,
-      medalColor: "#E5A01D",
-    },
-    {
-      name: data[2].name,
-      madsPoints: data[2].madsPoints,
-      image: data[2].image,
-      nameSize: 14,
-      pointSize: 10,
-      medalSize: 60,
-      medalTextSize: 24,
-      medalTextPadding: 7,
-      rank: 3,
-      medalColor: "#804A00",
-    },
-  ];
+
+const data = [
+  {
+    "name": "John Doe",
+    "number": "#11",
+    "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+    "madsPoints": 72
+  },
+  {
+    "name": "Jane Smith",
+    "number": "#12",
+    "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+    "madsPoints": 65
+  },
+  {
+    "name": "Alice Johnson",
+    "number": "#13",
+    "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+    "madsPoints": 70
+  },
+  {
+    "name": "Bob Brown",
+    "number": "#4",
+    "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+    "madsPoints": 68
+  },
+  {
+    "name": "Sarah Williams",
+    "number": "#5",
+    "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+    "madsPoints": 75
+  },
+  {
+    "name": "Michael Wilson",
+    "number": "#6",
+    "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+    "madsPoints": 71
+  },
+  {
+    "name": "Aadish Gote",
+    "number": "#7",
+    "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+    "madsPoints": 71
+  },
+  {
+    "name": "Mohit Jain",
+    "number": "#8",
+    "image": "https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg",
+    "madsPoints": 71
+  }
+]
+
+const topThreeData = [
+  {
+    name: data[1].name,
+    madsPoints: data[1].madsPoints,
+    image: data[1].image,
+    nameSize: 18,
+    pointSize: 12,
+    medalSize: 85,
+    medalTextSize: 28,
+    medalTextPadding: 12,
+    rank: 2,
+    medalColor: "#C0C0C0",
+  },
+  {
+    name: data[0].name,
+    madsPoints: data[0].madsPoints,
+    image: data[0].image,
+    nameSize: 24,
+    pointSize: 13,
+    medalSize: 110,
+    medalTextSize: 38,
+    medalTextPadding: 10,
+    rank: 1,
+    medalColor: "#E5A01D",
+  },
+  {
+    name: data[2].name,
+    madsPoints: data[2].madsPoints,
+    image: data[2].image,
+    nameSize: 14,
+    pointSize: 10,
+    medalSize: 60,
+    medalTextSize: 24,
+    medalTextPadding: 7,
+    rank: 3,
+    medalColor: "#804A00",
+  },
+];
+
+const MadsWeekOver = () => {
 
   const otherData = data.slice(3, data.length);
 
   const screenWidth = Dimensions.get("window").width - 50;
 
   return (
-    <>
-      <View>
-        <Text
-          style={[
-            TYPOGRAPHY.Heading,
-            { textAlign: "center", color: COLORS.primaryLight },
-          ]}
-        >
-          MADS LeaderBoard
-        </Text>
-        <Text
-          style={[
-            TYPOGRAPHY.Body,
-            { textAlign: "center", color: COLORS.primaryLight },
-          ]}
-        >
-          Discover The Leaders...
-        </Text>
-        <View style={styles.podiumContainer}>
-          {topThreeData.map((data) => {
-            return (
-              <View style={styles.rankContainer} key={data.rank}>
-                <View
-                  style={{
-                    position: "absolute",
-                    top: -20,
-                    left: "30%",
-                    right: 0,
-                    zIndex: 1,
-                  }}
-                >
-                  <Image
-                    source={{ uri: data.image }}
-                    style={styles.profileImage}
-                  />
-                </View>
-                <View style={styles.winnerInfo}>
-                  <Text
-                    style={[
-                      TYPOGRAPHY.SubTitle,
-                      { color: COLORS.primaryLight, fontSize: data.nameSize },
-                    ]}
-                  >
-                    {data.name}
-                  </Text>
-                  <Text
-                    style={[
-                      TYPOGRAPHY.Body,
-                      { color: COLORS.primaryLight, fontSize: data.pointSize },
-                    ]}
-                  >
-                    {`${data.madsPoints} MADS Points`}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text
-                    style={[
-                      styles.rankText,
-                      {
-                        fontSize: data.medalTextSize,
-                        top: `${data.medalTextPadding}%`,
-                      },
-                    ]}
-                  >
-                    {data.rank}
-                  </Text>
-                  <Medal
-                    size={`${data.medalSize}`}
-                    color={data.medalColor}
-                    variant="Bulk"
-                  />
-                </View>
+    <View
+      style={[
+        LAYOUTS.screenView,
+        {
+          backgroundColor: COLORS.primary,
+          position: "relative",
+          // paddingBottom: 70
+        },
+      ]}
+    >
+      <StatusBar style="light" />
+      <Text style={[TYPOGRAPHY.Heading, { color: COLORS.primaryLight, marginTop: 5 }]}>
+        MADS LeaderBoard
+      </Text>
+      <Text style={[TYPOGRAPHY.Body, { color: COLORS.primaryLight, marginBottom: 20 }]}>
+        And the Champions are ... 🏆
+      </Text>
+      <View style={styles.podiumContainer}>
+        {topThreeData.map((data) => {
+          return (
+            <View style={styles.rankContainer} key={data.rank}>
+              <View
+                style={{
+                  position: "absolute",
+                  top: -20,
+                  left: "30%",
+                  right: 0,
+                  zIndex: 1,
+                }}
+              >
+                <Image
+                  source={{ uri: data.image }}
+                  style={styles.profileImage}
+                />
               </View>
-            );
-          })}
-        </View>
+              <View style={styles.winnerInfo}>
+                <Text
+                  style={[
+                    TYPOGRAPHY.SubTitle,
+                    { color: COLORS.primaryLight, fontSize: data.nameSize },
+                  ]}
+                >
+                  {data.name}
+                </Text>
+                <Text
+                  style={[
+                    TYPOGRAPHY.Body,
+                    { color: COLORS.primaryLight, fontSize: data.pointSize },
+                  ]}
+                >
+                  {`${data.madsPoints} MADS Points`}
+                </Text>
+              </View>
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text
+                  style={[
+                    styles.rankText,
+                    {
+                      fontSize: data.medalTextSize,
+                      top: `${data.medalTextPadding}%`,
+                    },
+                  ]}
+                >
+                  {data.rank}
+                </Text>
+                <Medal
+                  size={`${data.medalSize}`}
+                  color={data.medalColor}
+                  variant="Bulk"
+                />
+              </View>
+            </View>
+          );
+        })}
       </View>
       <View style={styles.ranks}>
         <FlatList
@@ -207,7 +258,7 @@ const MadsWeekOver = ({ data }) => {
           keyExtractor={(item) => item.number}
         />
       </View>
-    </>
+    </View>
   );
 };
 
@@ -257,20 +308,20 @@ const styles = StyleSheet.create({
     width: 54,
     height: 54,
     resizeMode: "contain",
-    borderRadius: 22,
+    borderRadius: 100,
   },
 
   ranks: {
     position: "absolute",
-    height: "50%",
-    bottom: -20,
+    height: "54%",
+    bottom: 0,
     right: -200,
     left: -200,
     backgroundColor: COLORS.primaryLight,
     borderTopLeftRadius: 300,
     borderTopRightRadius: 300,
     paddingTop: 10,
-    paddingBottom: 10,
+    paddingBottom: 50,
   },
 });
 

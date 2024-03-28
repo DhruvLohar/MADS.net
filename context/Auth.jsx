@@ -3,8 +3,9 @@ import axios from "axios"
 import { createContext, useContext, useEffect, useReducer, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const domain = "192.168.1.2:8000"
+const domain = "192.168.172.42:8000"
 export const API_URL = `http://${domain}/`;
+export const MEDIA_URL = `http://${domain}`;
 export const WS_URL = `ws://${domain}`
 
 export const AuthContext = createContext()
@@ -18,6 +19,7 @@ export const AuthProvider = ({children}) => {
         token: null,
         userId: null,
         username: null,
+        profileImage: null,
         authenticated: false
     })
 
@@ -28,6 +30,7 @@ export const AuthProvider = ({children}) => {
             const res = await AsyncStorage.getItem('token')
             const uid = await AsyncStorage.getItem('userid')
             const name = await AsyncStorage.getItem('username')
+            const pfp = await AsyncStorage.getItem('profileImage')
 
             if (res && uid && name) {
                 console.log("User Session Found")
@@ -37,6 +40,7 @@ export const AuthProvider = ({children}) => {
                     token: res,
                     userId: uid,
                     username: name,
+                    profileImage: pfp,
                     authenticated: true
                 })
             }
@@ -54,7 +58,18 @@ export const AuthProvider = ({children}) => {
         
             axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
 
-            await AsyncStorage.multiSet([['token', data.token], ['username', data.name], ['userid', data.id?.toString()]])
+            await AsyncStorage.multiSet([
+                ['token', data.token], ['username', data.name], 
+                ['userid', data.id?.toString()],
+                ['profileImage', data.profileImage],
+            ])
+            setAuthState({
+                token: data.token,
+                userId: data.id,
+                username: data.name,
+                profileImage: data.profileImage,
+                authenticated: true
+            })
 
             return { error: false, data };
         } catch (e) {
@@ -73,6 +88,7 @@ export const AuthProvider = ({children}) => {
             token: null,
             userId: null,
             username: null,
+            profileImage: null,
             authenticated: false
         })
     }

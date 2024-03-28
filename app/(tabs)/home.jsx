@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from "expo-router"
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Pressable } from 'react-native';
 import { COLORS, LAYOUTS, TYPOGRAPHY } from '../../constants/theme';
 import { Directions, FlingGestureHandler, State } from 'react-native-gesture-handler';
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from '../../context/Auth';
 
 const HomeView = () => {
-  const [current, setCurrent] = useState('black');
-  const [name, setName] = useState(false);
 
-  useEffect(() => {
-    AsyncStorage.getItem("name").then((res) => {
-      setName(res)
-    })
-  }, [])
+  const router = useRouter()
+
+  const { authState } = useAuth()
+  const [current, setCurrent] = useState('black');
 
   const handleSwipeRight = (event) => {
     if (event.nativeEvent.state === State.ACTIVE) {
@@ -33,7 +31,7 @@ const HomeView = () => {
     <SafeAreaView style={[LAYOUTS.flexCenter, LAYOUTS.screenView, { backgroundColor: COLORS.primaryLight, position: "relative", }]}>
       <StatusBar style={"dark"} />
 
-      <Text style={TYPOGRAPHY.Heading}>Hi, {name ? name : "User"}!</Text>
+      <Text style={TYPOGRAPHY.Heading}>Hi, {authState.username}!</Text>
       <Text style={TYPOGRAPHY.Body}>Check out what others students are up to ...</Text>
 
       <FlingGestureHandler direction={Directions.RIGHT}
@@ -48,6 +46,10 @@ const HomeView = () => {
 
         </FlingGestureHandler>
       </FlingGestureHandler>
+
+      <Pressable onPress={() => router.push("/profile/5")} style={{marginTop: 10}}>
+        <Text>Check out Dhruv's Profile</Text>
+      </Pressable>
     </SafeAreaView>
   );
 }

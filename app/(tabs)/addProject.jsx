@@ -19,8 +19,8 @@ const AddProjectView = () => {
         console.log("Handling Images")
     }
 
-    const handleSubmit = () => {
-        console.log("Submit Project")
+    const handleSubmit = (values) => {
+        console.log("Submit Project", values)
     }
 
     return (
@@ -64,7 +64,7 @@ const AddProjectView = () => {
                             </View>
 
 
-                            <Button title="Submit Project" onPress={handleSubmit} type={"fill"} />
+                            <Button title="Add Project" onPress={handleSubmit} type={"fill"} />
                         </>
                     )}
                 </Formik>

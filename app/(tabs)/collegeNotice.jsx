@@ -10,6 +10,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import useAxios from "../../components/services/useAxios";
 import NoticeCard from "../../components/utils/NoticeCard";
 
+// import * as FileSystem from 'expo-file-system';
+// import * as MediaLibrary from 'expo-media-library';
+
 const CollegeNotices = memo(() => {
 
     const { data, error, loaded } = useAxios('notices/');
@@ -25,6 +28,25 @@ const CollegeNotices = memo(() => {
     const closeModal = () => {
         setSelectedImage(null);
         setModalVisible(false);
+    }
+
+    const handleDownload = async () => {
+        // try {
+        //     const { status } = await MediaLibrary.requestPermissionsAsync();
+        //     if (status !== 'granted') {
+        //         console.error('Media library permission not granted.');
+        //         return;
+        //     }
+
+        //     const fileUri = FileSystem.cacheDirectory + 'image.jpg';
+        //     await FileSystem.downloadAsync(selectedImage, fileUri);
+
+        //     const asset = await MediaLibrary.createAssetAsync(fileUri);
+        //     await MediaLibrary.saveToLibraryAsync(asset);
+        //     console.log('Image saved to library.');
+        // } catch (error) {
+        //     console.error('Failed to download and save image:', error);
+        // }
     }
 
     return (
@@ -44,8 +66,8 @@ const CollegeNotices = memo(() => {
                         <TouchableOpacity style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.8)' }} onPress={closeModal}>
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                 <Image source={{ uri: selectedImage }} style={{ width: "90%", height: "85%", borderRadius: 30, objectFit: "contain" }} />
-                                
-                                <TouchableOpacity style={{ position: 'absolute', top: 20, right: 80 }}>
+
+                                <TouchableOpacity style={{ position: 'absolute', top: 20, right: 80 }} onPress={handleDownload}>
                                     <DocumentDownload color={"white"} size={32} />
                                 </TouchableOpacity>
                                 <TouchableOpacity style={{ position: 'absolute', top: 20, right: 20 }} onPress={closeModal}>

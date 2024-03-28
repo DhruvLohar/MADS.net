@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ConditionContext, {
   ConditionProvider,
 } from "../../condition/conditionsContext";
-import { useAuth } from "../../context/Auth";
+import { MEDIA_URL, useAuth } from "../../context/Auth";
 
 
 const TabIcon = memo(({ Icon, focused }) => {
@@ -44,7 +44,7 @@ export default _layout = () => {
   const TabHeader = memo(({ route }) => {
     const router = useRouter();
     const path = usePathname();
-    const { isConditionMet } = useContext(ConditionContext);
+    // const { isConditionMet } = useContext(ConditionContext);
 
     // const currentTab = tabs.find((tab) => tab.name === path.replace("/", ""));
     const currentTab = tabs.get(route.params.title)
@@ -55,17 +55,17 @@ export default _layout = () => {
           styles.tabHeader,
           {
             backgroundColor:
-              path === "/madsWeek" && isConditionMet
+              path === "/madsWeek/madsWeekOver"
                 ? COLORS.primary
                 : COLORS.primaryLight,
           },
         ]}
       >
         <StatusBar
-          style={path === "/madsWeek" && isConditionMet ? "light" : "dark"}
+          style={path === "/madsWeek" ? "light" : "dark"}
           translucent={false}
           backgroundColor={
-            path === "/madsWeek" && isConditionMet
+            path === "/madsWeek/madsWeekOver"
               ? COLORS.primary
               : COLORS.primaryLight
           }
@@ -75,7 +75,7 @@ export default _layout = () => {
             TYPOGRAPHY.Header,
             {
               color:
-                path === "/madsWeek" && isConditionMet
+                path === "/madsWeek/madsWeekOver"
                   ? COLORS.primaryLight
                   : COLORS.primaryDark,
             },
@@ -89,7 +89,7 @@ export default _layout = () => {
           onPress={() => router.push(`/profile/${authState?.userId}`)}
         >
           <Image
-            source={require("../../assets/profile.jpeg")}
+            source={{ uri: MEDIA_URL + authState?.profileImage }}
             style={styles.profileImage}
           />
         </TouchableOpacity>
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 44,
     height: 44,
-    resizeMode: "contain",
+    resizeMode: "cover",
     borderRadius: 22,
   },
 });

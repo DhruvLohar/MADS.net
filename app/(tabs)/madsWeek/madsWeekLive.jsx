@@ -11,11 +11,12 @@ import {
 import { COLORS, LAYOUTS, TYPOGRAPHY } from "../../../constants/theme";
 import Button, { TextButton } from "../../../components/utils/Button";
 import InfoPill from "../../../components/utils/InfoPill";
-const MadsWeekLive = ({ PageData }) => {
-  const images = PageData.images;
+
+const MadsWeekLive = ({ ps }) => {
+  const images = ps.images;
 
   const Carousel = ({ images }) => {
-    const [selectedImage, setSelectedImage] = useState(images[0]);
+    const [selectedImage, setSelectedImage] = useState(images[0].image);
 
     const handlePress = (image) => {
       setSelectedImage(image);
@@ -29,9 +30,9 @@ const MadsWeekLive = ({ PageData }) => {
             <TouchableOpacity
               key={index}
               style={styles.box}
-              onPress={() => handlePress(image)}
+              onPress={() => handlePress(image.image)}
             >
-              <Image source={{ uri: image }} style={styles.thumbnail} />
+              <Image source={{ uri: image.image }} style={styles.thumbnail} />
             </TouchableOpacity>
           ))}
         </View>
@@ -39,9 +40,7 @@ const MadsWeekLive = ({ PageData }) => {
     );
   };
 
-  const rules = PageData.rules;
-
-  const InfoList = PageData.infoList;
+  const quickPills = ["React", "Frontend Engg"]
 
   return (
     <ScrollView>
@@ -55,8 +54,8 @@ const MadsWeekLive = ({ PageData }) => {
           flexWrap: "wrap",
         }}
       >
-        {InfoList.map((Info, index) => (
-          <InfoPill key={index} text={Info} />
+        {quickPills.map((text, index) => (
+          <InfoPill key={index} text={text} />
         ))}
       </View>
       <Text style={TYPOGRAPHY.Body}>
@@ -64,18 +63,9 @@ const MadsWeekLive = ({ PageData }) => {
         MADS Points and realife project experience!
       </Text>
       <Carousel images={images} />
-      <Text style={TYPOGRAPHY.SubTitle}>Instagram Clone Web App</Text>
+      <Text style={TYPOGRAPHY.SubTitle}>{ps.ps_title}</Text>
       <Text style={TYPOGRAPHY.Body}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod
-        arcu sed odio consectetur condimentum. Maecenas non ultrices massa.
-        Nullam eget viverra est. Aliquam odio erat, laoreet ut ex tristique,
-        interdum pretium eros.
-      </Text>
-      <Text style={TYPOGRAPHY.Body}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod
-        arcu sed odio consectetur condimentum. Maecenas non ultrices massa.
-        Nullam eget viverra est. Aliquam odio erat, laoreet ut ex tristique,
-        interdum pretium eros.
+        {ps.ps_desc}
       </Text>
       <View
         style={{
@@ -87,34 +77,35 @@ const MadsWeekLive = ({ PageData }) => {
       >
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <TextButton title="start date" />
-          <Text>{PageData.date.startDate}</Text>
+          <Text>12th Jan, 2024</Text>
         </View>
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <TextButton title="end date" />
-          <Text>{PageData.date.endDate}</Text>
+          <Text>15th Jan, 2024</Text>
         </View>
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <TextButton title="submission" />
-          <Text>{PageData.submissions}</Text>
+          <Text>34</Text>
         </View>
       </View>
       <Text style={[TYPOGRAPHY.SubTitle, { marginTop: 30 }]}>Rules</Text>
       <View>
-        {rules.map((item, index) => (
+        {ps.rules.map((item, index) => (
           <Text key={index} style={styles.listItem}>
             • {item}
           </Text>
         ))}
       </View>
 
-      <Text style={[TYPOGRAPHY.SubTitle, { marginTop: 30 }]}>Notes</Text>
+      <Text style={[TYPOGRAPHY.SubTitle, { marginTop: 30 }]}>Rewards</Text>
       <View style={{ marginBottom: 30 }}>
-        {rules.map((item, index) => (
+        {ps.rewards.map((item, index) => (
           <Text key={index} style={styles.listItem}>
             • {item}
           </Text>
         ))}
       </View>
+
       <Button title="Submit your project" />
     </ScrollView>
   );
@@ -131,10 +122,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     padding: 10,
     marginTop: 30,
+    objectFit: "contain"
   },
   bottomRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     marginTop: 10,
     paddingVertical: 10,
     marginBottom: 30,
@@ -149,6 +141,9 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     borderRadius: 10,
   },
+  listItem: {
+    marginBottom: 3
+  }
 });
 
 export default MadsWeekLive;

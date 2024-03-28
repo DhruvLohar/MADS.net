@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView, Pressable } from 'react-native';
 
 import { StatusBar } from 'expo-status-bar';
 import { useGlobalSearchParams, useRouter } from "expo-router";
@@ -10,7 +10,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import useAxios from '../../components/services/useAxios';
 import { useAuth, WS_URL } from '../../context/Auth';
 
-const TextMessage = ({ username, text, self, aboveIsSelf, isFirst }) => {
+const TextMessage = ({ username, userId, text, self, aboveIsSelf, isFirst }) => {
+    const router = useRouter()
+
     const bubbleStyle = {
         alignSelf: self ? 'flex-end' : 'flex-start',
         backgroundColor: self ? COLORS.primary : COLORS.primaryDark,
@@ -22,10 +24,12 @@ const TextMessage = ({ username, text, self, aboveIsSelf, isFirst }) => {
     return (
         <View>
             {(self || (self === aboveIsSelf)) && (self || !isFirst) ? (null) : (
-                <View style={{flexDirection: "row", justifyContent: "flex-start", alignItems: "center", opacity: .6, marginTop: 5}}>
-                    <View style={{width: 15, height: 15, backgroundColor: "black", borderRadius: 100, marginRight: 5}}></View>
-                    <Text style={{ fontSize: 15 }}>{username}</Text>
-                </View>
+                <Pressable onPress={() => router.push(`/profile/${userId}`)}>
+                    <View style={{flexDirection: "row", justifyContent: "flex-start", alignItems: "center", opacity: .6, marginTop: 5}}>
+                        <View style={{width: 15, height: 15, backgroundColor: "black", borderRadius: 100, marginRight: 5}}></View>
+                        <Text style={{ fontSize: 15 }}>{username}</Text>
+                    </View>
+                </Pressable>
             )}
             <View style={[textBubbleStyles.container, bubbleStyle]}>
                 <Text style={{ color: COLORS.primaryLight }}>{text}</Text>
@@ -50,14 +54,14 @@ const Messenger = () => {
         if (webSocket) {
             // messages.push("Me : " + msgToSend);
             messages.push({ username: authState?.username, text: msgToSend, self: true })
-            webSocket.send(JSON.stringify({ username: authState?.username, message: msgToSend }));
+            webSocket.send(JSON.stringify({ uid: authState?.userId, username: authState?.username, message: msgToSend }));
             setMsgToSend(null);
         }
     }
 
     const handleIncomingMessage = (payload) => {
         // setMessages(prev => [...prev, payload.username + " : " + payload.message])
-        setMessages(prev => [...prev, { username: payload.username, text: payload.message, self: false }])
+        setMessages(prev => [...prev, { uid: payload.uid, username: payload.username, text: payload.message, self: false }])
     }
 
     useEffect(() => {
@@ -98,7 +102,11 @@ const Messenger = () => {
 
                     <ScrollView style={{ width: "100%", marginBottom: 70, paddingHorizontal: 10 }}>
                         {messages.map((message, i) => (
-                            <TextMessage key={i} username={message.username} text={message.text} self={message.self} aboveIsSelf={i > 0 ? messages[i - 1].self : false} isFirst={i === 0} />
+                            <TextMessage 
+                                key={i} username={message.username} 
+                                text={message.text} self={message.self} userId={message?.uid}
+                                aboveIsSelf={i > 0 ? messages[i - 1].self : false} isFirst={i === 0}
+                            />
                         ))}
                     </ScrollView>
 
